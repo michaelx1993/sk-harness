@@ -1,0 +1,11 @@
+{
+  "version": 1,
+  "active_iteration": null,
+  "phase": "init",
+  "loop_count": 0,
+  "last_updated": "1970-01-01T00:00:00Z",
+  "tasks": [],
+  "current_batch": [],
+  "paused": false,
+  "pause_reason": null
+}

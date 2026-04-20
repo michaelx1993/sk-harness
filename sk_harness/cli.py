@@ -61,10 +61,12 @@ def init_cmd(name: str | None) -> None:
     if target.exists():
         console.print(f"[yellow].skspec/ already exists at[/yellow] {target}")
         console.print("Repair-only mode: checking for missing files.")
-    repo_root = Path(__file__).resolve().parent.parent
-    skeleton = repo_root / "templates" / "harness" / "skspec-skeleton"
+    # Resolve skeleton from installed package (uv tool install) or repo checkout
+    pkg_skeleton = Path(__file__).resolve().parent / "skeleton"
+    repo_skeleton = Path(__file__).resolve().parent.parent / "templates" / "harness" / "skspec-skeleton"
+    skeleton = pkg_skeleton if pkg_skeleton.exists() else repo_skeleton
     if not skeleton.exists():
-        console.print(f"[red]skeleton not found at {skeleton}[/red]")
+        console.print(f"[red]skeleton not found (tried {pkg_skeleton} and {repo_skeleton})[/red]")
         sys.exit(3)
     for src in skeleton.rglob("*"):
         if src.is_dir():

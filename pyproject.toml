@@ -66,6 +66,8 @@ Documentation = "https://github.com/github/spec-kit"
 # ---------------------------------------------------------------------------
 [tool.hatch.build.targets.wheel]
 packages = ["sk_harness"]
+# Include skeleton data (dotfiles in sk_harness/skeleton/ are excluded by default)
+force-include = { "sk_harness/skeleton" = "sk_harness/skeleton" }
 
 # ---------------------------------------------------------------------------
 # Pytest — ERD §14.5 mandates 80% coverage minimum over sk_harness/.
