@@ -29,7 +29,12 @@ You (Claude) act as the engineer-subagent per `templates/harness/agents/engineer
 6. Append decision-log entry.
 
 ### Principles
-- ≤ 30 tasks, max wave depth 6
-- Each task = one dispatch, ≤ 6h
-- Idempotent by default
+- **Size the task count to the project.** Rubric: toy/script = 3–6 tasks; small feature = 6–12; medium = 12–20; large = 20–30 (hard cap). **Under-decompose by default.**
+- Merge siblings that share agent + validator + output dir, or that have linear 1:1 deps fitting in ≤ 6h
+- Don't split "write X" and "test X" — one task with `validator: tdd-guide` is almost always better
+- Only split when tasks can actually run in parallel (different files AND different reviewers)
+- Max wave depth 6; each task ≤ 6h; idempotent by default
 - Validator catalog-specific (python-reviewer, tdd-guide, code-reviewer, etc.)
+
+### When in doubt: merge.
+You can always split a task mid-execution via `.prd-pending/` proposal if it turns out too chunky. Over-decomposition is harder to undo.
