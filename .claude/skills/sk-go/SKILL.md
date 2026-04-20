@@ -49,8 +49,8 @@ For each active role that is a reviewer (architect, qa, security, engineer), spa
 **Step 4 — Decision branch** (first-match)
 Inspect review results + state:
 - (a) Task hit `max_retries` (state.tasks has `failed` entries): `sk pause --reason max_retries_exceeded`, report, stop
-- (b) Any review found ERD-vs-reality mismatch: trigger `/sk-plan` revision flow (snapshot + architect rewrite), then continue
-- (c) Any review found spec gap: write `.prd-pending/proposal-<ts>.md`, `sk pause --reason prd_proposal`, stop
+- (b) Any review found ERD-vs-reality mismatch OR technical ambiguity: trigger `/sk-plan` revision flow (snapshot + architect rewrites, logs `[MAJOR]` or `[routine]` per Constitution §VIII), **continue** — technical items never pause the loop
+- (c) Any review found a genuine USER-INTENT gap (what feature, which requirement wins, is scope X in or out, acceptance threshold): write `.prd-pending/proposal-<ts>.md`, `sk pause --reason prd_proposal`, stop. Tech items do NOT go here.
 - (d) Deadlock (`ready_set=[]` but pending tasks exist, and this has happened ≥2 consecutive loops): `sk pause --reason deadlock`, stop
 - (e) Task granularity issue surfaced: invoke engineer to adjust tasks-<N>.md, then continue
 - (f) All clear: continue

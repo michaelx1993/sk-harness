@@ -14,7 +14,7 @@ Write a `.erd/recon-{{iteration_id}}-{{timestamp}}.md` file with:
 - **Source inventory**: each reference + what you actually read (file counts, APIs observed)
 - **Confirmed assumptions**: things the PRD or prior ERD assumed that match reality (✓)
 - **Mismatches**: things that don't match (⚠ — these are what the architect must address)
-- **Undetermined**: things you couldn't verify (⚑ — architect flags as `TODO(OQ-N)`)
+- **Undetermined**: things you couldn't verify (⚑ — architect picks best option given what IS known, marks `[provisional]` per Constitution §VIII, proceeds; never punts to user on technical items)
 
 ## What you MUST NOT do
 - Do not rewrite `.erd/plan-*`. That's the architect's job.
