@@ -4,110 +4,116 @@ description: Start or resume the TPM master loop (Phases 1-5)
 argument-hint: "[--until-pause] [--no-confirm]"
 ---
 
-You (Claude) ARE the TPM agent for this session. Drive the loop in PRD §5.3 until a natural stopping point.
+You (Claude) ARE the TPM agent. Drive the loop in PRD §5.3 until a natural stop. All state-mutating operations go through the `sk` CLI (no raw Python in this skill — the CLI handles atomicity, locking, and logging).
 
 ## Read on entry
 
 ```bash
-sk status          # get current phase, task counts, pause state
-sk log --tail 20   # recent decisions
+sk status           # current phase, task counts, pause state
+sk log --tail 20    # recent decisions
 ```
 
-Also read (without printing full content):
+Also read:
 - `.skspec/.iterations.json` — active iteration id
 - `.skspec/.progress/state.json` — phase, tasks, batch, paused
 - `.skspec/.agents.json` — roster
-- `.skspec/.agents-catalog.json` — candidate pool
 - `.skspec/.erd/plan-<N>.md` — current ERD
 - `.skspec/.task/tasks-<N>.md` — task DAG
-- Recent `.skspec/.progress/decision-log.md` entries
 
 ## Loop algorithm (per assistant turn)
 
-**Step 0 — Check pause + pending-channels**
+**Step 0 — Check pause + pending channels**
+```bash
+# State file shows paused + reason; react accordingly
+sk erd-pending list   # auto-accept any agent-authored ERD proposals
+```
 If `state.paused=True`:
-- `pause_reason=review_requested` → dispatch multi-role review subagents (see Step 3b below); write findings to decision-log; then auto-resume (clear pause) and continue
-- any other reason → report and stop; user resumes via `/sk-resume`
+- `review_requested` → dispatch review subagents, log findings, `sk resume`, continue
+- any other reason → report and stop
+If any `.skspec/.prd-pending/proposal-*.md` exists (not yet accepted/rejected): `sk pause --reason prd_proposal`, stop.
 
-Before looping further, scan `.skspec/.erd-pending/`:
-- If any proposal exists: read it, snapshot plan-NNN.md, `sk erd-pending accept <id>` (agent-autonomous per Decision #4), then continue
-- If `.skspec/.prd-pending/` has proposals: set `paused=True`, `pause_reason=prd_proposal`, and stop (requires user)
+**Step 1 — Phase routing** (from `sk status`)
+- `spec-drafted` → run `/sk-plan` flow inline (architect writes ERD)
+- `phase-1-erd` → run `/sk-tasks` flow (engineer decomposes, rolling-wave)
+- `phase-2-complete-ready-for-go` → enter micro loop
+- `phase-3-implementation` → continue micro loop
+- `completed` → exit; prompt user for `/sk-specify`
 
-**Step 1 — Phase routing**
-- phase=`spec-drafted` → trigger architect (`/sk-plan` logic inline) to write ERD, then continue
-- phase=`phase-1-erd` (ERD just written) → trigger engineer (`/sk-tasks` logic inline) to decompose, then continue
-- phase=`phase-2-complete-ready-for-go` → enter micro loop (Step 2)
-- phase=`phase-3-implementation` → continue micro loop (Step 2)
-- phase=`completed` → nothing to do; prompt user for `/sk-specify` on next iteration
+**Step 2 — Agent roster reconciliation**
+```bash
+sk loop reconcile
+```
+Prints `added: [...]` and `deactivated: [...]`. Already persisted to `.agents.json`.
 
-**Step 2 — Agent roster reconciliation** (within micro loop)
-Use `sk_harness.loop.roster_reconcile(io, paths, iteration, loop=N)`. Writes `.agents.json` and returns (added, deactivated). Log the diff.
-
-**Step 3 — Multi-role review** (lightweight; skip on first entry since Phase 1/2 already reviewed)
-For each active role that is a reviewer (architect, qa, security, engineer), spawn a Task subagent with the role's template `templates/harness/agents/<role>.md`. Ask: "Does the plan still hold? Any blockers before next batch?". Concurrent dispatch via parallel tool calls.
+**Step 3 — Multi-role review** (skip on first entry after Phase 2)
+Spawn Task subagents (parallel, one assistant message) for each active reviewer role using `templates/harness/agents/<role>.md` as system prompt. Ask: "Does the plan still hold? Any blockers?"
 
 **Step 4 — Decision branch** (first-match)
-Inspect review results + state:
-- (a) Task hit `max_retries` (state.tasks has `failed` entries): `sk pause --reason max_retries_exceeded`, report, stop
-- (b) Any review found ERD-vs-reality mismatch OR technical ambiguity: trigger `/sk-plan` revision flow (snapshot + architect rewrites, logs `[MAJOR]` or `[routine]` per Constitution §VIII), **continue** — technical items never pause the loop
-- (c) Any review found a genuine USER-INTENT gap (what feature, which requirement wins, is scope X in or out, acceptance threshold): write `.prd-pending/proposal-<ts>.md`, `sk pause --reason prd_proposal`, stop. Tech items do NOT go here.
-- (d) Deadlock (`ready_set=[]` but pending tasks exist, and this has happened ≥2 consecutive loops): `sk pause --reason deadlock`, stop
-- (e) Task granularity issue surfaced: invoke engineer to adjust tasks-<N>.md, then continue
-- (f) All clear: continue
+- (a) failed tasks present → `sk pause --reason max_retries_exceeded`, stop
+- (b) ERD-reality mismatch OR technical ambiguity → write ERD revision proposal, `sk erd-pending accept <id>`, continue (per Constitution §VIII, tech items never pause)
+- (c) **genuine USER-INTENT gap** → write `.prd-pending/proposal-<ts>.md`, `sk pause --reason prd_proposal`, stop
+- (d) deadlock (≥2 consecutive empty ready-sets) → `sk pause --reason deadlock`, stop
+- (e) task granularity issue → run engineer to adjust tasks-<N>.md, continue
+- (f) all clear → continue
 
 **Step 5 — Compute ready set + batch dispatch**
-```python
-from sk_harness.paths import Paths
-from sk_harness.state.io import StateIO
-from sk_harness.loop import load_dag, compute_ready, begin_batch
-
-paths = Paths.find()
-io = StateIO(paths)
-state = io.load_state()
-graph, meta = load_dag(paths, state.active_iteration)
-ready = compute_ready(state, graph)
-batch = ready[:io.load_agents().max_concurrency]
-state = begin_batch(io, state, batch, loop=state.loop_count + 1)
+```bash
+ready=$(sk loop ready)                 # one task id per line
+# read max_concurrency from `sk config show`; take first N
+sk loop begin-batch T-01 T-02 T-03     # marks running + updates current_batch
 ```
-
-Now dispatch all `batch` tasks in **parallel** via Task tool calls (one assistant message, N tool uses). For each task T-XX:
-- Subagent type: the `agent` field from T-XX sidecar (e.g., general-purpose, python-reviewer, etc.)
-- Prompt: derived from `templates/harness/agents/engineer.md` with task metadata, ERD refs, outputs list
-- Constraint: subagent must NOT touch `.progress/state.json` or `decision-log.md` — TPM serializes writes
+Then dispatch each task in **parallel** via Task tool (one assistant message, N tool uses):
+- Subagent type: `agent` field from T-XX sidecar (view via `sk tasks show T-XX`)
+- Prompt: derived from `templates/harness/agents/engineer.md` + task metadata
+- Constraint: subagent must NOT touch state.json or decision-log — TPM does that via `sk loop settle`
 
 **Step 6 — Settle batch**
-For each task that returned, call `sk_harness.loop.settle_task(io, paths, iteration, task_id, success=..., agent=..., summary=..., outputs=[...])`. This writes snapshot + updates state atomically.
+For each returned task:
+```bash
+sk loop settle T-01 --success --agent general-purpose \
+  --summary "implemented X" --output path/a --output path/b
+# or on failure:
+sk loop settle T-02 --failure --agent general-purpose --summary "timed out"
+```
+`sk loop settle` writes the snapshot, updates task state, bumps retry counter on failure, and handles max_retries → `failed` transition.
 
-**Step 7 — Knowledge extraction**
-For any task that (a) failed then succeeded, (b) triggered ERD revision, (c) introduced a reusable pattern: dispatch knowledge-extractor subagent per `templates/harness/agents/knowledge-extractor.md`. Append to `.knowledge/`.
+**Step 7 — Knowledge extraction** (for notable completions)
+Dispatch `knowledge-extractor` subagent per `templates/harness/agents/knowledge-extractor.md`. It writes to `.knowledge/{patterns,gotchas,decisions}.md`.
 
 **Step 8 — Termination check**
-```python
-from sk_harness.loop import check_termination
-decision, reason = check_termination(state, graph, consecutive_empty_ready=N)
+```bash
+decision=$(sk loop terminate)
 ```
-- decision=`continue` → next loop iteration (goto Step 0 on next assistant turn)
-- decision=`pause` → `sk pause --reason <reason>`, report, stop
-- decision=`retro` → enter Phase 5 (see below)
+Output: `continue` | `pause:<reason>` | `retro`.
+- `continue` → next assistant turn (goto Step 0)
+- `pause:*` → `sk pause --reason <that-reason>`, stop
+- `retro` → enter Phase 5
 
-**Step 8.5 — Step flag check**
-If `state.pause_reason == step` (armed by `/sk-step`): after this batch settles, set `paused=True` and stop. Do not continue to another loop even if decision was `continue`.
+**Step 8.5 — Step flag honored**
+If `state.pause_reason == step` (armed by `/sk-step`): after settle, `sk pause --reason step`, stop.
 
 **Phase 5 — Iteration retro**
-Dispatch retro-subagent per `templates/harness/agents/retro.md`. It writes `.knowledge/retrospectives/<NNN>-retro.md`. Then run `sk iteration complete`. Loop exits.
+Dispatch `retro` subagent per `templates/harness/agents/retro.md` → writes `.knowledge/retrospectives/<NNN>-retro.md`. Then `sk iteration complete`. Exit.
 
 ## Headless mode (`--until-pause`)
-If `--until-pause` in $ARGUMENTS: continue the loop without pausing between assistant turns until you hit (a), (c), (d), or (retro). Report final state.
+Continue across assistant turns without stopping until (a), (c), (d), or retro. Report final state.
 
-If `--no-confirm` in $ARGUMENTS: treat PRD proposals as auto-rejected (log the rejection) rather than pausing. This trades safety for unattended progress.
+With `--no-confirm`: treat any PRD proposals as auto-rejected (log + `sk specify --reject <id>`) rather than pausing.
 
-## Output per turn
-End each turn with a concise status:
+## Per-turn output
+End each turn with:
 ```
 loop=N phase=X batch=[T-XX,T-YY] next=(continue|pause:reason|retro)
 ```
 
+## Logging
+Every decision-worthy event:
+```bash
+sk loop log "decision-slug" "one-paragraph rationale"
+```
+
 ## Constitution reminders
-- §III: snapshot before ERD rewrites
-- §IV: log every decision
-- §VII: PRD changes go through `.prd-pending/`
+- §III: snapshots auto-written by `sk loop settle` before state transitions
+- §IV: `sk loop log` + all other `sk` state commands write decision-log entries
+- §VII: PRD changes → `.prd-pending/` (human confirm); ERD/tasks → autonomous
+- §VIII: technical ambiguity → decide, log `[MAJOR]` or `[routine]`, proceed

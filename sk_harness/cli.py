@@ -543,5 +543,116 @@ def constitution_cmd(show: bool) -> None:
         console.print(f"Edit: {cpath}")
 
 
+@main.group("loop")
+def loop_group() -> None:
+    """TPM-loop primitives invoked by /sk-go SKILL.md."""
+
+
+@loop_group.command("ready")
+def loop_ready_cmd() -> None:
+    """Print ready-set task IDs, one per line (for shell consumption)."""
+    from sk_harness.loop import compute_ready, load_dag
+    paths = _paths_or_exit()
+    io = StateIO(paths)
+    state = io.load_state()
+    if not state.active_iteration:
+        console.print("[red]no active iteration[/red]")
+        sys.exit(2)
+    graph, _ = load_dag(paths, state.active_iteration)
+    for tid in compute_ready(state, graph):
+        click.echo(tid)
+
+
+@loop_group.command("begin-batch")
+@click.argument("task_ids", nargs=-1, required=True)
+def loop_begin_batch_cmd(task_ids: tuple[str, ...]) -> None:
+    """Mark tasks running and set current_batch."""
+    from sk_harness.loop import begin_batch
+    paths = _paths_or_exit()
+    io = StateIO(paths)
+    state = io.load_state()
+    new = begin_batch(io, state, list(task_ids), loop=state.loop_count + 1)
+    console.print(f"[green]✓[/green] batch started (loop {new.loop_count}): {list(task_ids)}")
+
+
+@loop_group.command("settle")
+@click.argument("task_id")
+@click.option("--success/--failure", default=True)
+@click.option("--agent", default="general-purpose")
+@click.option("--summary", default="")
+@click.option("--output", "outputs", multiple=True,
+              help="Output file path (repeat for each)")
+def loop_settle_cmd(
+    task_id: str, success: bool, agent: str, summary: str, outputs: tuple[str, ...],
+) -> None:
+    """Record task completion: write snapshot + update state."""
+    from sk_harness.loop import settle_task
+    paths = _paths_or_exit()
+    io = StateIO(paths)
+    state = io.load_state()
+    if not state.active_iteration:
+        console.print("[red]no active iteration[/red]")
+        sys.exit(2)
+    settle_task(
+        io, paths, state.active_iteration, task_id,
+        success=success, agent=agent, summary=summary or f"{task_id} settled",
+        outputs=list(outputs),
+    )
+    verb = "done" if success else "failed"
+    console.print(f"[green]✓[/green] {task_id} settled → {verb}")
+
+
+@loop_group.command("reconcile")
+def loop_reconcile_cmd() -> None:
+    """Run agent-roster reconciliation; print added/deactivated."""
+    from sk_harness.loop import roster_reconcile
+    paths = _paths_or_exit()
+    io = StateIO(paths)
+    state = io.load_state()
+    if not state.active_iteration:
+        console.print("[red]no active iteration[/red]")
+        sys.exit(2)
+    added, deactivated = roster_reconcile(
+        io, paths, state.active_iteration, loop=state.loop_count,
+    )
+    console.print(f"added: {added or '[]'}")
+    console.print(f"deactivated: {deactivated or '[]'}")
+
+
+@loop_group.command("terminate")
+def loop_terminate_cmd() -> None:
+    """Print termination decision: continue / pause:<reason> / retro."""
+    from sk_harness.loop import check_termination, load_dag
+    paths = _paths_or_exit()
+    io = StateIO(paths)
+    state = io.load_state()
+    if not state.active_iteration:
+        console.print("retro")
+        sys.exit(0)
+    graph, _ = load_dag(paths, state.active_iteration)
+    # v1: pass 0 for consecutive empty — the skill tracks this across loops
+    decision, reason = check_termination(state, graph, consecutive_empty_ready=0)
+    if decision == "pause":
+        click.echo(f"pause:{reason.value if reason else 'unknown'}")
+        sys.exit(0)
+    click.echo(decision)
+
+
+@loop_group.command("log")
+@click.argument("decision")
+@click.argument("body", default="")
+@click.option("--actor", default="tpm")
+def loop_log_cmd(decision: str, body: str, actor: str) -> None:
+    """Append a decision-log entry."""
+    paths = _paths_or_exit()
+    io = StateIO(paths)
+    state = io.load_state()
+    DecisionLog(paths.decision_log).append(
+        iteration=state.active_iteration or "?",
+        loop=state.loop_count, actor=actor, decision=decision, body=body or decision,
+    )
+    console.print("[green]✓[/green] logged")
+
+
 if __name__ == "__main__":
     main()
