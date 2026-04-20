@@ -1,11 +1,8 @@
 """Unit tests for loop orchestration."""
 from __future__ import annotations
 
-import json
-
 import pytest
 
-from sk_harness.dag.graph import TaskGraph
 from sk_harness.dag.parser import write_sidecars
 from sk_harness.loop import (
     begin_batch,

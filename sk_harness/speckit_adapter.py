@@ -27,7 +27,7 @@ class CommandRename:
     invocation: str        # e.g. "/sk-specify"
 
     @classmethod
-    def of(cls, internal: str) -> "CommandRename":
+    def of(cls, internal: str) -> CommandRename:
         stem = internal.replace(".", "-")
         return cls(internal=internal, skill_dir=stem, invocation=f"/{stem}")
 

@@ -2,21 +2,21 @@
 
 from __future__ import annotations
 
-import json
 import shutil
 import sys
+from datetime import UTC
 from pathlib import Path
 
 import click
 from rich.console import Console
 from rich.table import Table
 
+from sk_harness.analyze import analyze_iteration, format_report
+from sk_harness.checklist import generate_checklist
 from sk_harness.dag.graph import TaskGraph
 from sk_harness.dag.parser import read_sidecars
 from sk_harness.observability.decision_log import DecisionLog
 from sk_harness.paths import Paths
-from sk_harness.analyze import analyze_iteration, format_report
-from sk_harness.checklist import generate_checklist
 from sk_harness.proposals import (
     accept_erd_proposal,
     accept_proposal,
@@ -28,14 +28,9 @@ from sk_harness.proposals import (
 from sk_harness.state.io import StateIO
 from sk_harness.state.models import (
     AgentEntry,
-    AgentsConfig,
-    IterationEntry,
-    IterationsRegistry,
     PauseReason,
     Phase,
-    ProgressState,
     TaskState,
-    TaskStateBrief,
 )
 
 console = Console()
@@ -298,9 +293,9 @@ def iteration_complete_cmd() -> None:
             console.print(f"[red]cannot complete — {len(pending)} task(s) pending/running[/red]")
             console.print(f"  {pending}")
             sys.exit(2)
-        from datetime import datetime, timezone
+        from datetime import datetime
         active.status = "completed"
-        active.completed_at = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        active.completed_at = datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
         state.phase = Phase.completed
         reg.active = None
         io.save_iterations(reg)

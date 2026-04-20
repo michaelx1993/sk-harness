@@ -2,18 +2,18 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
-from enum import Enum
+from datetime import UTC, datetime
+from enum import StrEnum
 from typing import Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
 
 def _utcnow() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-class TaskState(str, Enum):
+class TaskState(StrEnum):
     pending = "pending"
     running = "running"
     done = "done"
@@ -21,7 +21,7 @@ class TaskState(str, Enum):
     blocked = "blocked"
 
 
-class Phase(str, Enum):
+class Phase(StrEnum):
     init = "init"
     spec_drafted = "spec-drafted"
     phase_1_erd = "phase-1-erd"
@@ -32,7 +32,7 @@ class Phase(str, Enum):
     completed = "completed"
 
 
-class PauseReason(str, Enum):
+class PauseReason(StrEnum):
     user = "user"
     step = "step"
     prd_proposal = "prd_proposal"

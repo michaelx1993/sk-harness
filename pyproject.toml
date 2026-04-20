@@ -115,7 +115,9 @@ select = [
     "SIM", # flake8-simplify
 ]
 ignore = [
-    "E501",  # line too long — handled by formatter
+    "E501",   # line too long — handled by formatter
+    "E702",   # multiple statements on one line — cosmetic; we use `tab.add_column(...); tab.add_column(...)` style intentionally
+    "UP042",  # str+Enum → StrEnum upgrade; defer (pydantic v2 handles both, switching risks subtle JSON semantics)
 ]
 
 [tool.ruff.lint.per-file-ignores]

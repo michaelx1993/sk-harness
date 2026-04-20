@@ -6,13 +6,11 @@ import pytest
 from sk_harness.paths import Paths
 from sk_harness.proposals import (
     accept_erd_proposal,
-    accept_proposal,
     file_erd_proposal,
     file_proposal,
     list_erd_pending,
     list_pending,
     reject_erd_proposal,
-    reject_proposal,
 )
 
 

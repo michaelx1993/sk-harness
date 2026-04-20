@@ -1,8 +1,6 @@
 """Tests for analyze and checklist."""
 from __future__ import annotations
 
-import json
-
 import pytest
 
 from sk_harness.analyze import analyze_iteration, format_report

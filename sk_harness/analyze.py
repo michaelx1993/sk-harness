@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import json
 import re
 from dataclasses import dataclass, field
-from pathlib import Path
 
 from sk_harness.dag.graph import TaskGraph
 from sk_harness.dag.parser import read_sidecars
@@ -87,7 +85,7 @@ def analyze_iteration(paths: Paths, iteration: str) -> AnalyzeResult:
             r.failures.append(
                 f"{t.id} references §{','.join(sorted(missing))} missing from plan-{iteration}.md"
             )
-    if not any(f"references" in x for x in r.failures):
+    if not any("references" in x for x in r.failures):
         r.checks_passed += 1
 
     # Check 2: acceptance_ids exist in test-plan

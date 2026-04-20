@@ -13,7 +13,7 @@ class Paths:
         self.skspec = self.root / SKSPEC_DIRNAME
 
     @classmethod
-    def find(cls, start: Path | None = None) -> "Paths":
+    def find(cls, start: Path | None = None) -> Paths:
         cur = Path(start or Path.cwd()).resolve()
         for cand in [cur, *cur.parents]:
             if (cand / SKSPEC_DIRNAME).is_dir():

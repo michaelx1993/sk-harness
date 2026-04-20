@@ -24,7 +24,6 @@ from sk_harness.paths import Paths
 from sk_harness.state.io import StateIO
 from sk_harness.state.models import PauseReason
 
-
 EXIT_CLEAN = 0
 EXIT_ERROR = 1
 EXIT_MAX_RETRIES = 2

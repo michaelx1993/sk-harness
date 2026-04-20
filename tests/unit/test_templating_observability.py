@@ -1,11 +1,14 @@
 """Unit tests for templating, observability.decision_log, paths, prd_merge, snapshots, headless."""
 from __future__ import annotations
 
-import json
-
 import pytest
 
-from sk_harness.headless import EXIT_DEADLOCK, EXIT_MAX_RETRIES, EXIT_PRD_PROPOSAL, pause_reason_to_exit
+from sk_harness.headless import (
+    EXIT_DEADLOCK,
+    EXIT_MAX_RETRIES,
+    EXIT_PRD_PROPOSAL,
+    pause_reason_to_exit,
+)
 from sk_harness.observability.decision_log import DecisionLog, append_decision
 from sk_harness.paths import Paths
 from sk_harness.prd_merge import accept_proposal, file_proposal, list_pending, reject_proposal

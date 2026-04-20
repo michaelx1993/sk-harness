@@ -5,9 +5,10 @@ from __future__ import annotations
 import json
 import os
 import tempfile
-from contextlib import contextmanager
+from collections.abc import Iterator
+from contextlib import contextmanager, suppress
 from pathlib import Path
-from typing import Any, Iterator, Type, TypeVar
+from typing import Any, TypeVar
 
 from filelock import FileLock, Timeout
 from pydantic import BaseModel
@@ -33,10 +34,8 @@ def atomic_write(path: Path, content: str) -> None:
             os.fsync(f.fileno())
         os.replace(tmp, path)
     except Exception:
-        try:
+        with suppress(OSError):
             os.unlink(tmp)
-        except OSError:
-            pass
         raise
 
 
@@ -48,7 +47,7 @@ def write_model(path: Path, model: BaseModel) -> None:
     atomic_write(path, model.model_dump_json(indent=2) + "\n")
 
 
-def read_model(path: Path, cls: Type[T]) -> T:
+def read_model(path: Path, cls: type[T]) -> T:
     return cls.model_validate_json(path.read_text(encoding="utf-8"))
 
 

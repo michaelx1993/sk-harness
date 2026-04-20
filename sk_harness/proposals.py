@@ -9,7 +9,7 @@ Per Constitution §VII:
 from __future__ import annotations
 
 import re
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Literal
 
@@ -21,11 +21,11 @@ Channel = Literal["prd", "erd"]
 
 
 def _now_id() -> str:
-    return datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+    return datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
 
 
 def _now_iso() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _channel_dir(paths: Paths, channel: Channel) -> Path:
@@ -109,7 +109,7 @@ def accept_proposal(paths: Paths, proposal_path: Path, iteration: str) -> Path:
     addendum = (
         f"\n\n---\n\n"
         f"## Addendum from proposal {proposal_path.stem} "
-        f"({datetime.now(timezone.utc).strftime('%Y-%m-%d')})\n\n"
+        f"({datetime.now(UTC).strftime('%Y-%m-%d')})\n\n"
         f"{change}\n"
     )
     spec.write_text(existing + addendum, encoding="utf-8")
@@ -132,7 +132,7 @@ def accept_erd_proposal(paths: Paths, proposal_path: Path, iteration: str) -> Pa
     plan = paths.plan(iteration)
     if plan.exists():
         paths.erd_history_dir.mkdir(parents=True, exist_ok=True)
-        ts = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        ts = datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
         snap = paths.erd_history_dir / f"plan-{iteration}-{ts}-before-erd-proposal.md"
         snap.write_text(plan.read_text(encoding="utf-8"), encoding="utf-8")
 
@@ -141,7 +141,7 @@ def accept_erd_proposal(paths: Paths, proposal_path: Path, iteration: str) -> Pa
     addendum = (
         f"\n\n---\n\n"
         f"## Addendum from ERD proposal {proposal_path.stem} "
-        f"({datetime.now(timezone.utc).strftime('%Y-%m-%d')})\n\n"
+        f"({datetime.now(UTC).strftime('%Y-%m-%d')})\n\n"
         f"{change}\n"
     )
     plan.write_text(existing + addendum, encoding="utf-8")

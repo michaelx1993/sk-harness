@@ -15,9 +15,7 @@ All functions are atomic under `StateIO.lock()`.
 from __future__ import annotations
 
 import json
-import re
-from datetime import datetime, timezone
-from pathlib import Path
+from datetime import UTC, datetime
 from typing import Any
 
 from sk_harness.dag.graph import TaskGraph
@@ -28,7 +26,6 @@ from sk_harness.snapshots import write_snapshot
 from sk_harness.state.io import StateIO
 from sk_harness.state.models import (
     AgentEntry,
-    AgentsConfig,
     PauseReason,
     Phase,
     ProgressState,
@@ -38,7 +35,7 @@ from sk_harness.state.models import (
 
 
 def _now() -> str:
-    return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    return datetime.now(UTC).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def _task_states(state: ProgressState) -> dict[str, TaskState]:
@@ -130,9 +127,8 @@ def check_termination(
     if not pending and not running:
         return "retro", None
     ready = graph.ready_set(states)
-    if not ready and not running:
-        if consecutive_empty_ready >= 2:
-            return "pause", PauseReason.deadlock
+    if not ready and not running and consecutive_empty_ready >= 2:
+        return "pause", PauseReason.deadlock
     return "continue", None
 
 
@@ -172,7 +168,7 @@ def roster_reconcile(
 
     with io.lock():
         cfg = io.load_agents()
-        active_roles = {a.role for a in cfg.active()}
+        {a.role for a in cfg.active()}
 
         for subagent_type, entry in catalog.items():
             domains = entry.get("domains", [])
@@ -187,7 +183,7 @@ def roster_reconcile(
                 cfg.roster.append(AgentEntry(
                     role=role, subagent_type=subagent_type,
                     status="active", added_loop=loop,
-                    rationale=f"Matched keyword in ERD/tasks corpus",
+                    rationale="Matched keyword in ERD/tasks corpus",
                 ))
                 added.append(role)
             elif hit and existing is not None and existing.status == "inactive":
