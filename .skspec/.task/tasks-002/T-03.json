@@ -1,0 +1,21 @@
+{
+  "id": "T-03",
+  "title": "PauseReason enum extension",
+  "deps": [],
+  "agent": "general-purpose",
+  "validator": "python-reviewer",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/state/models.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": [
+    "SM-104",
+    "SM-105"
+  ],
+  "estimate": "S",
+  "erd_refs": [
+    "\u00a75"
+  ]
+}

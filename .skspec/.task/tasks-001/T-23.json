@@ -1,0 +1,18 @@
+{
+  "id": "T-23",
+  "title": "/sk.tasks.retry + sk.agent",
+  "deps": ["T-16", "T-19"],
+  "agent": "general-purpose",
+  "validator": "tdd-guide",
+  "idempotent": true,
+  "outputs": [
+    ".claude/commands/sk.tasks.retry.md",
+    ".claude/commands/sk.agent.md",
+    "tests/integration/test_overrides.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-42", "SM-52"],
+  "estimate": "S",
+  "erd_refs": ["§4", "§6"]
+}

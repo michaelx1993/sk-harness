@@ -1,0 +1,19 @@
+{
+  "id": "T-08",
+  "title": "DAG markdown parser and JSON sidecar generator",
+  "deps": ["T-04"],
+  "agent": "general-purpose",
+  "validator": "tdd-guide",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/dag/__init__.py",
+    "sk_harness/dag/parser.py",
+    "sk_harness/dag/grammar.py",
+    "tests/unit/test_dag_parser.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-15", "INT-02"],
+  "estimate": "M",
+  "erd_refs": ["§8.1", "§8.2", "§8.3", "§8.4", "§8.5"]
+}

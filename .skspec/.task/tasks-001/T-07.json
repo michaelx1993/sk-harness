@@ -1,0 +1,19 @@
+{
+  "id": "T-07",
+  "title": "Paths resolver, constants, schema-version check",
+  "deps": ["T-02"],
+  "agent": "general-purpose",
+  "validator": "python-reviewer",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/paths.py",
+    "sk_harness/constants.py",
+    "sk_harness/state/migrations.py",
+    "tests/unit/test_paths.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["INT-20"],
+  "estimate": "S",
+  "erd_refs": ["§3", "§15", "§15.1", "§15.2", "§13.3"]
+}

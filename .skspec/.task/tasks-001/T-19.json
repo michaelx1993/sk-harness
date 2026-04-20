@@ -1,0 +1,20 @@
+{
+  "id": "T-19",
+  "title": "/sk.init + sk.constitution + sk.config",
+  "deps": ["T-03", "T-05", "T-06", "T-07", "T-11"],
+  "agent": "general-purpose",
+  "validator": "tdd-guide",
+  "idempotent": true,
+  "outputs": [
+    ".claude/commands/sk.init.md",
+    ".claude/commands/sk.constitution.md",
+    ".claude/commands/sk.config.md",
+    "sk_harness/cli.py",
+    "tests/integration/test_init_command.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-01", "SM-02", "SM-03", "OBS-10"],
+  "estimate": "M",
+  "erd_refs": ["§4.1", "§4.4", "§6"]
+}

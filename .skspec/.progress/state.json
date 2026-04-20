@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "active_iteration": "002",
+  "phase": "completed",
+  "loop_count": 2,
+  "last_updated": "2026-04-20T08:30:00Z",
+  "current_batch": [],
+  "tasks": [
+    {
+      "id": "T-01",
+      "state": "done",
+      "retries": 0,
+      "snapshot": null
+    },
+    {
+      "id": "T-02",
+      "state": "done",
+      "retries": 0,
+      "snapshot": null
+    },
+    {
+      "id": "T-03",
+      "state": "done",
+      "retries": 0,
+      "snapshot": null
+    },
+    {
+      "id": "T-04",
+      "state": "done",
+      "retries": 0,
+      "snapshot": null
+    },
+    {
+      "id": "T-05",
+      "state": "done",
+      "retries": 0,
+      "snapshot": null
+    },
+    {
+      "id": "T-06",
+      "state": "done",
+      "retries": 0,
+      "snapshot": null
+    },
+    {
+      "id": "T-07",
+      "state": "done",
+      "retries": 0,
+      "snapshot": null
+    },
+    {
+      "id": "T-08",
+      "state": "done",
+      "retries": 0,
+      "snapshot": null
+    }
+  ],
+  "paused": false,
+  "pause_reason": null
+}

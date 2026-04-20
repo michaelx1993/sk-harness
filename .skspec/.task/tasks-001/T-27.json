@@ -1,0 +1,19 @@
+{
+  "id": "T-27",
+  "title": "CI configuration and lint baseline",
+  "deps": ["T-02"],
+  "agent": "general-purpose",
+  "validator": "code-reviewer",
+  "idempotent": true,
+  "outputs": [
+    ".github/workflows/test.yml",
+    ".github/workflows/lint.yml",
+    "ruff.toml",
+    ".gitignore"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-01"],
+  "estimate": "S",
+  "erd_refs": ["§2.1", "§14.5"]
+}

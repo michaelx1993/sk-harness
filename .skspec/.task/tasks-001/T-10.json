@@ -1,0 +1,19 @@
+{
+  "id": "T-10",
+  "title": "Snapshot serializer and restore",
+  "deps": ["T-05", "T-06"],
+  "agent": "general-purpose",
+  "validator": "tdd-guide",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/snapshots/__init__.py",
+    "sk_harness/snapshots/serializer.py",
+    "sk_harness/snapshots/restore.py",
+    "tests/unit/test_snapshot.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-32", "INT-03", "INT-11"],
+  "estimate": "M",
+  "erd_refs": ["§10", "§10.1", "§10.3", "§10.5"]
+}

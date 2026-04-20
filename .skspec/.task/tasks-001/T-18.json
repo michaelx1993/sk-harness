@@ -1,0 +1,18 @@
+{
+  "id": "T-18",
+  "title": "Headless mode runner",
+  "deps": ["T-07", "T-14", "T-15", "T-17"],
+  "agent": "general-purpose",
+  "validator": "tdd-guide",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/headless/__init__.py",
+    "sk_harness/headless/runner.py",
+    "tests/unit/test_headless.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-80", "SM-81", "SM-82"],
+  "estimate": "M",
+  "erd_refs": ["§13", "§13.2", "§13.3", "§13.4"]
+}

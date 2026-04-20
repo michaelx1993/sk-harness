@@ -1,0 +1,17 @@
+{
+  "id": "T-09",
+  "title": "DAG graph, ready-set, cycle detection, topo sort",
+  "deps": ["T-08"],
+  "agent": "general-purpose",
+  "validator": "tdd-guide",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/dag/graph.py",
+    "tests/unit/test_dag_graph.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-20", "SM-21", "SM-22", "SM-43", "INT-10"],
+  "estimate": "S",
+  "erd_refs": ["§3", "§9.4", "§8.4"]
+}

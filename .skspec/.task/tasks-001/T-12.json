@@ -1,0 +1,21 @@
+{
+  "id": "T-12",
+  "title": "Core subagent templates (_base, tpm, architect, engineer, qa, security)",
+  "deps": ["T-11"],
+  "agent": "general-purpose",
+  "validator": "code-reviewer",
+  "idempotent": true,
+  "outputs": [
+    "templates/harness/agents/_base.md",
+    "templates/harness/agents/tpm.md",
+    "templates/harness/agents/architect.md",
+    "templates/harness/agents/engineer.md",
+    "templates/harness/agents/qa.md",
+    "templates/harness/agents/security.md"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-20", "SM-24", "OBS-05"],
+  "estimate": "L",
+  "erd_refs": ["§5.2", "§5.4", "§6.3"]
+}

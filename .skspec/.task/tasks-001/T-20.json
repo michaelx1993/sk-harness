@@ -1,0 +1,22 @@
+{
+  "id": "T-20",
+  "title": "/sk.specify + sk.clarify + sk.plan + sk.tasks + sk.analyze + sk.checklist",
+  "deps": ["T-08", "T-11", "T-17", "T-19"],
+  "agent": "general-purpose",
+  "validator": "tdd-guide",
+  "idempotent": true,
+  "outputs": [
+    ".claude/commands/sk.specify.md",
+    ".claude/commands/sk.clarify.md",
+    ".claude/commands/sk.plan.md",
+    ".claude/commands/sk.tasks.md",
+    ".claude/commands/sk.analyze.md",
+    ".claude/commands/sk.checklist.md",
+    "tests/integration/test_specify_flow.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-10", "SM-11", "SM-12", "SM-13", "SM-14", "SM-15", "SM-71"],
+  "estimate": "L",
+  "erd_refs": ["§4.2", "§4.3", "§1.3"]
+}

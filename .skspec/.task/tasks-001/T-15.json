@@ -1,0 +1,18 @@
+{
+  "id": "T-15",
+  "title": "Batch dispatcher with AgentRunner protocol",
+  "deps": ["T-09", "T-11", "T-12"],
+  "agent": "general-purpose",
+  "validator": "tdd-guide",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/loop/dispatcher.py",
+    "tests/unit/test_dispatcher.py",
+    "tests/fixtures/mock_runner.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-20", "SM-21", "SM-22", "INT-10", "INT-11"],
+  "estimate": "M",
+  "erd_refs": ["§9", "§9.1", "§9.2", "§9.3", "§14.3"]
+}

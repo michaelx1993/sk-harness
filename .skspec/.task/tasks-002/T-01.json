@@ -1,0 +1,23 @@
+{
+  "id": "T-01",
+  "title": "Rename prd_merge \u2192 proposals, add .erd-pending/ flow",
+  "deps": [],
+  "agent": "general-purpose",
+  "validator": "python-reviewer",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/proposals.py",
+    "sk_harness/prd_merge.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": [
+    "SM-100",
+    "SM-101"
+  ],
+  "estimate": "S",
+  "erd_refs": [
+    "\u00a71",
+    "\u00a77"
+  ]
+}

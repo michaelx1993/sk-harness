@@ -1,0 +1,27 @@
+{
+  "id": "T-05",
+  "title": "Seven SKILL.md files",
+  "deps": [
+    "T-03",
+    "T-04"
+  ],
+  "agent": "general-purpose",
+  "validator": "code-reviewer",
+  "idempotent": true,
+  "outputs": [
+    ".claude/skills/sk-constitution/SKILL.md",
+    ".claude/skills/sk-clarify/SKILL.md",
+    ".claude/skills/sk-analyze/SKILL.md",
+    ".claude/skills/sk-checklist/SKILL.md",
+    ".claude/skills/sk-step/SKILL.md",
+    ".claude/skills/sk-review/SKILL.md",
+    ".claude/skills/sk-config/SKILL.md"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": [
+    "SM-108"
+  ],
+  "estimate": "S",
+  "erd_refs": []
+}

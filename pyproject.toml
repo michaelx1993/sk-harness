@@ -1,0 +1,138 @@
+# Build-system choice: hatchling
+# Rationale: hatchling is PEP 517/660 compliant, has minimal dependencies,
+# zero-config for pure-Python src layouts, and is now the recommended default
+# in the Python Packaging Authority tutorials. setuptools was considered but
+# carries a larger legacy surface and config boilerplate that we do not need.
+# (ERD §2.2: we standardize on `uv` as the package manager, which works equally
+# well with either backend.)
+
+[build-system]
+requires = ["hatchling>=1.24"]
+build-backend = "hatchling.build"
+
+[project]
+name = "sk-harness"
+version = "0.3.0"
+description = "sk Harness — Spec-Driven Development plus state orchestration on top of spec-kit"
+readme = "README.md"
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+authors = [
+    { name = "sk Harness contributors" },
+]
+keywords = ["claude-code", "sdd", "spec-kit", "orchestration", "agents"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: POSIX",
+    "Operating System :: MacOS",
+]
+
+# Runtime dependencies — the seven from ERD §2.4.
+# Do not add anything here without an ERD amendment.
+dependencies = [
+    "pydantic>=2",
+    "ruamel.yaml",
+    "filelock",
+    "rich",
+    "networkx",
+    "jsonschema",
+    "click",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8",
+    "pytest-cov",
+    "ruff",
+    "mypy",
+]
+
+[project.scripts]
+# Stub entry point — thin CLI for discoverability. Real command wiring
+# lands in T-19..T-23 (click-based `sk_harness.cli` dispatcher).
+sk = "sk_harness.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/github/spec-kit"
+Documentation = "https://github.com/github/spec-kit"
+
+# ---------------------------------------------------------------------------
+# Hatchling build configuration
+# ---------------------------------------------------------------------------
+[tool.hatch.build.targets.wheel]
+packages = ["sk_harness"]
+
+# ---------------------------------------------------------------------------
+# Pytest — ERD §14.5 mandates 80% coverage minimum over sk_harness/.
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+minversion = "8.0"
+testpaths = ["tests"]
+addopts = "--cov=sk_harness --cov-fail-under=80 --cov-report=term-missing -ra"
+markers = [
+    "unit: fast isolated unit tests",
+    "integration: cross-module integration tests",
+]
+
+[tool.coverage.run]
+branch = true
+source = ["sk_harness"]
+
+[tool.coverage.report]
+show_missing = true
+skip_covered = false
+exclude_lines = [
+    "pragma: no cover",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "if TYPE_CHECKING:",
+]
+
+# ---------------------------------------------------------------------------
+# Ruff — formatter + linter (ERD §2.4 dev extras).
+# ---------------------------------------------------------------------------
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = [
+    "speckit",          # upstream, verbatim — never lint
+    "templates/upstream",
+]
+
+[tool.ruff.lint]
+select = [
+    "E",   # pycodestyle errors
+    "W",   # pycodestyle warnings
+    "F",   # pyflakes
+    "I",   # isort
+    "B",   # flake8-bugbear
+    "UP",  # pyupgrade
+    "SIM", # flake8-simplify
+]
+ignore = [
+    "E501",  # line too long — handled by formatter
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**/*.py" = ["B011"]  # allow assert False in tests
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+# ---------------------------------------------------------------------------
+# mypy — optional in v1 per tasks-001 T-27 (revisit in v2).
+# ---------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.11"
+strict = false
+ignore_missing_imports = true
+exclude = [
+    "speckit/.*",
+    "templates/.*",
+]

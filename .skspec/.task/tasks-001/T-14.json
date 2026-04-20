@@ -1,0 +1,19 @@
+{
+  "id": "T-14",
+  "title": "Phase entry points and micro-loop state machine",
+  "deps": ["T-09", "T-10", "T-12", "T-16"],
+  "agent": "general-purpose",
+  "validator": "tdd-guide",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/loop/__init__.py",
+    "sk_harness/loop/phases.py",
+    "sk_harness/loop/micro_loop.py",
+    "tests/unit/test_micro_loop.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-20", "SM-23", "SM-43", "OBS-01"],
+  "estimate": "L",
+  "erd_refs": ["§5.3", "§9.1"]
+}

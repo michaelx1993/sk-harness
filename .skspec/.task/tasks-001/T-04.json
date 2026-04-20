@@ -1,0 +1,21 @@
+{
+  "id": "T-04",
+  "title": "Define pydantic state models and JSON schemas",
+  "deps": ["T-02"],
+  "agent": "general-purpose",
+  "validator": "python-reviewer",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/state/__init__.py",
+    "sk_harness/state/models.py",
+    "sk_harness/state/schemas/iterations.schema.json",
+    "sk_harness/state/schemas/agents.schema.json",
+    "sk_harness/state/schemas/state.schema.json",
+    "sk_harness/state/schemas/task.schema.json"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-01", "SM-32", "INT-20"],
+  "estimate": "M",
+  "erd_refs": ["§3", "§7.1", "§7.4"]
+}

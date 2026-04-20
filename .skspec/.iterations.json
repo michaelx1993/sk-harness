@@ -1,0 +1,28 @@
+{
+  "version": 1,
+  "active": null,
+  "iterations": [
+    {
+      "id": "001",
+      "slug": "sk-harness-mvp",
+      "status": "completed",
+      "started_at": "2026-04-19T00:00:00Z",
+      "completed_at": "2026-04-20T07:00:00Z",
+      "spec": "prd/spec-001.md",
+      "plan": ".erd/plan-001.md",
+      "tasks": ".task/tasks-001.md",
+      "test_plan": "tests/test-plan-001.md"
+    },
+    {
+      "id": "002",
+      "slug": "harness-completion",
+      "status": "completed",
+      "started_at": "2026-04-20T07:30:00Z",
+      "completed_at": "2026-04-20T08:30:00Z",
+      "spec": "prd/spec-002.md",
+      "plan": ".erd/plan-002.md",
+      "tasks": ".task/tasks-002.md",
+      "test_plan": "tests/test-plan-002.md"
+    }
+  ]
+}

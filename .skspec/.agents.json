@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "max_concurrency": 3,
+  "max_retries": 2,
+  "max_active_agents": 8,
+  "roster": [
+    {
+      "role": "tpm",
+      "subagent_type": "general-purpose",
+      "status": "active",
+      "added_loop": 0,
+      "rationale": "Main TPM orchestrator"
+    }
+  ]
+}

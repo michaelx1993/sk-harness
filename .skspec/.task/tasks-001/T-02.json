@@ -1,0 +1,20 @@
+{
+  "id": "T-02",
+  "title": "Scaffold sk_harness package and pyproject.toml",
+  "deps": ["T-01"],
+  "agent": "general-purpose",
+  "validator": "python-reviewer",
+  "idempotent": true,
+  "outputs": [
+    "pyproject.toml",
+    "uv.lock",
+    "sk_harness/__init__.py",
+    "sk_harness/__main__.py",
+    "tests/conftest.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-01"],
+  "estimate": "S",
+  "erd_refs": ["§2", "§2.1", "§2.2", "§2.4", "§3"]
+}

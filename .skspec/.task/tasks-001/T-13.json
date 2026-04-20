@@ -1,0 +1,19 @@
+{
+  "id": "T-13",
+  "title": "Auxiliary subagent templates and built-in agents-catalog",
+  "deps": ["T-11"],
+  "agent": "general-purpose",
+  "validator": "code-reviewer",
+  "idempotent": true,
+  "outputs": [
+    "templates/harness/agents/knowledge-extractor.md",
+    "templates/harness/agents/retro.md",
+    "templates/agents-catalog.json",
+    "tests/unit/test_agent_templates.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-50", "SM-70", "SM-72"],
+  "estimate": "M",
+  "erd_refs": ["§6.3", "§12.3"]
+}

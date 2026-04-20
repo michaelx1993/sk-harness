@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "_comment": "Project-level agent catalog. Merged with ~/.claude/sk-agent-catalog.json (user-level) and templates/agents-catalog.json (built-in). Project entries override user, user overrides built-in.",
+  "catalog": {
+    "architect":           { "domains": ["architecture", "system-design", "scalability"] },
+    "code-reviewer":       { "domains": ["review", "quality", "best-practices"] },
+    "tdd-guide":           { "domains": ["tdd", "testing", "coverage"] },
+    "security-reviewer":   { "domains": ["auth", "crypto", "input-validation", "secrets", "owasp"] },
+    "database-reviewer":   { "domains": ["sql", "postgres", "schema", "migration", "query"] },
+    "performance-optimizer": { "domains": ["profiling", "bundle-size", "memory", "perf"] },
+    "refactor-cleaner":    { "domains": ["dead-code", "cleanup", "consolidation"] },
+    "doc-updater":         { "domains": ["documentation", "codemap", "readme"] },
+    "e2e-runner":          { "domains": ["e2e", "playwright", "critical-flow"] },
+    "build-error-resolver":{ "domains": ["build-failure", "type-error"] },
+    "go-reviewer":         { "domains": ["golang"] },
+    "rust-reviewer":       { "domains": ["rust"] },
+    "typescript-reviewer": { "domains": ["typescript", "javascript", "node"] },
+    "python-reviewer":     { "domains": ["python"] },
+    "java-reviewer":       { "domains": ["java", "spring-boot"] },
+    "kotlin-reviewer":     { "domains": ["kotlin", "android", "kmp"] },
+    "csharp-reviewer":     { "domains": ["csharp", "dotnet"] },
+    "cpp-reviewer":        { "domains": ["cpp"] },
+    "flutter-reviewer":    { "domains": ["flutter", "dart"] },
+    "general-purpose":     { "domains": ["fallback", "research", "implementation"] }
+  }
+}

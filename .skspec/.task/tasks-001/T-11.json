@@ -1,0 +1,18 @@
+{
+  "id": "T-11",
+  "title": "speckit_adapter and templating engine",
+  "deps": ["T-07"],
+  "agent": "general-purpose",
+  "validator": "python-reviewer",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/speckit_adapter.py",
+    "sk_harness/templating.py",
+    "tests/unit/test_templating.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-10", "SM-71", "SM-72"],
+  "estimate": "M",
+  "erd_refs": ["§1.3", "§4.2", "§6.2", "§6.4"]
+}

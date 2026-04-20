@@ -1,0 +1,25 @@
+{
+  "id": "T-06",
+  "title": "analyze + checklist implementation",
+  "deps": [
+    "T-04"
+  ],
+  "agent": "general-purpose",
+  "validator": "python-reviewer",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/analyze.py",
+    "sk_harness/checklist.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": [
+    "SM-102",
+    "SM-103"
+  ],
+  "estimate": "M",
+  "erd_refs": [
+    "\u00a72",
+    "\u00a73"
+  ]
+}

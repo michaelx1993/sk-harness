@@ -1,0 +1,23 @@
+{
+  "id": "T-02",
+  "title": "paths.erd_pending_dir + skeleton update",
+  "deps": [
+    "T-01"
+  ],
+  "agent": "general-purpose",
+  "validator": "code-reviewer",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/paths.py",
+    "templates/harness/skspec-skeleton/.erd-pending/.gitkeep"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": [
+    "SM-101"
+  ],
+  "estimate": "S",
+  "erd_refs": [
+    "\u00a71"
+  ]
+}

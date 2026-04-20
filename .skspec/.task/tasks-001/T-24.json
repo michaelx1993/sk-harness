@@ -1,0 +1,19 @@
+{
+  "id": "T-24",
+  "title": "Golden-path integration tests",
+  "deps": ["T-15", "T-16", "T-17", "T-18"],
+  "agent": "general-purpose",
+  "validator": "tdd-guide",
+  "idempotent": true,
+  "outputs": [
+    "tests/integration/test_micro_loop_goldens.py",
+    "tests/fixtures/mock_task_responses/",
+    "tests/fixtures/golden_iterations/",
+    "tests/fixtures/skspec_skeleton/"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-20", "SM-21", "SM-40", "SM-41", "SM-43", "SM-60", "SM-61", "SM-62", "SM-30", "SM-31"],
+  "estimate": "L",
+  "erd_refs": ["§14.4", "§14.5"]
+}

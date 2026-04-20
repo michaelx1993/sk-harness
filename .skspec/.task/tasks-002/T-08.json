@@ -1,0 +1,34 @@
+{
+  "id": "T-08",
+  "title": "Tests + coverage + retro",
+  "deps": [
+    "T-04",
+    "T-05",
+    "T-06",
+    "T-07"
+  ],
+  "agent": "general-purpose",
+  "validator": "tdd-guide",
+  "idempotent": true,
+  "outputs": [
+    "tests/unit/test_proposals.py",
+    "tests/unit/test_cli_iter002.py",
+    "tests/unit/test_analyze.py",
+    ".skspec/.knowledge/retrospectives/002-retro.md"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": [
+    "SM-100",
+    "SM-101",
+    "SM-102",
+    "SM-103",
+    "SM-104",
+    "SM-105",
+    "SM-106",
+    "SM-107",
+    "SM-108"
+  ],
+  "estimate": "M",
+  "erd_refs": []
+}

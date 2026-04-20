@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.eggs/
+build/
+dist/
+
+# Test artifacts
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# uv
+# NOTE: uv.lock is committed on purpose
+
+# OS / editor
+.DS_Store
+*.swp
+.idea/
+.vscode/
+
+# sk runtime
+.skspec/.lock

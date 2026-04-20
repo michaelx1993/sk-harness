@@ -1,0 +1,20 @@
+{
+  "id": "T-03",
+  "title": "Set up templates/harness/ stubs and skspec-skeleton blueprint",
+  "deps": ["T-01"],
+  "agent": "general-purpose",
+  "validator": "code-reviewer",
+  "idempotent": true,
+  "outputs": [
+    "templates/harness/spec-NNN.md",
+    "templates/harness/plan-NNN.md",
+    "templates/harness/tasks-NNN.md",
+    "templates/harness/test-plan-NNN.md",
+    "templates/harness/skspec-skeleton/.gitkeep"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-01", "SM-02"],
+  "estimate": "S",
+  "erd_refs": ["§3", "§1.3"]
+}

@@ -1,0 +1,20 @@
+{
+  "id": "T-25",
+  "title": "Documentation: README, INSTALL, architecture, commands",
+  "deps": ["T-19", "T-20", "T-21", "T-22", "T-23"],
+  "agent": "doc-updater",
+  "validator": "code-reviewer",
+  "idempotent": true,
+  "outputs": [
+    "README.md",
+    "docs/INSTALL.md",
+    "docs/architecture.md",
+    "docs/commands.md",
+    "docs/harness-internals.md"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-90-proposed"],
+  "estimate": "M",
+  "erd_refs": ["§2.3", "§3"]
+}

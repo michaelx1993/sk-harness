@@ -1,0 +1,20 @@
+{
+  "id": "T-16",
+  "title": "Multi-role review, roster reconciliation, termination check",
+  "deps": ["T-09", "T-13"],
+  "agent": "general-purpose",
+  "validator": "tdd-guide",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/loop/review.py",
+    "sk_harness/loop/roster.py",
+    "sk_harness/loop/termination.py",
+    "tests/unit/test_roster.py",
+    "tests/unit/test_termination.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-24", "SM-43", "SM-50", "SM-51", "SM-52", "SM-53"],
+  "estimate": "L",
+  "erd_refs": ["§3", "§5.2", "§5.3"]
+}

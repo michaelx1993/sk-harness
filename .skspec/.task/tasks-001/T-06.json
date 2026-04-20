@@ -1,0 +1,19 @@
+{
+  "id": "T-06",
+  "title": "Decision-log writer and event schema",
+  "deps": ["T-04"],
+  "agent": "general-purpose",
+  "validator": "tdd-guide",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/observability/__init__.py",
+    "sk_harness/observability/decision_log.py",
+    "sk_harness/observability/events.py",
+    "tests/unit/test_decision_log.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["OBS-01", "OBS-02", "OBS-03", "OBS-04", "OBS-05"],
+  "estimate": "M",
+  "erd_refs": ["§16", "§16.1", "§16.3", "§16.4", "§5.4"]
+}

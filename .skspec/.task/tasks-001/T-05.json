@@ -1,0 +1,17 @@
+{
+  "id": "T-05",
+  "title": "Atomic IO, cooperative lock, load_validated",
+  "deps": ["T-04"],
+  "agent": "general-purpose",
+  "validator": "tdd-guide",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/state/io.py",
+    "tests/unit/test_state_io.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-32", "INT-20"],
+  "estimate": "M",
+  "erd_refs": ["§7.1", "§7.2", "§7.4"]
+}

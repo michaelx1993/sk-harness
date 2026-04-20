@@ -1,0 +1,21 @@
+{
+  "id": "T-17",
+  "title": "PRD proposal/merge engine and knowledge extractor",
+  "deps": ["T-05", "T-06"],
+  "agent": "general-purpose",
+  "validator": "tdd-guide",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/prd/__init__.py",
+    "sk_harness/prd/proposal.py",
+    "sk_harness/prd/merge.py",
+    "sk_harness/knowledge/__init__.py",
+    "sk_harness/knowledge/extractor.py",
+    "tests/unit/test_prd_merge.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-11", "SM-12", "SM-13", "SM-60", "SM-61", "SM-62", "SM-63"],
+  "estimate": "L",
+  "erd_refs": ["§11", "§11.1", "§11.2", "§11.3", "§11.4", "§6.3"]
+}

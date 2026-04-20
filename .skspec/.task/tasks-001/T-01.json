@@ -1,0 +1,19 @@
+{
+  "id": "T-01",
+  "title": "Fork spec-kit, pin upstream SHA, write UPSTREAM.md",
+  "deps": [],
+  "agent": "general-purpose",
+  "validator": "code-reviewer",
+  "idempotent": true,
+  "outputs": [
+    "docs/UPSTREAM.md",
+    "speckit/",
+    "templates/upstream/",
+    "LICENSE"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": ["SM-01", "OBS-01"],
+  "estimate": "M",
+  "erd_refs": ["§1", "§1.2", "§1.3", "§1.4"]
+}

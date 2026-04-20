@@ -1,0 +1,29 @@
+{
+  "id": "T-04",
+  "title": "CLI subcommands (config, step, review, erd-pending)",
+  "deps": [
+    "T-01",
+    "T-03"
+  ],
+  "agent": "general-purpose",
+  "validator": "python-reviewer",
+  "idempotent": true,
+  "outputs": [
+    "sk_harness/cli.py"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": [
+    "SM-102",
+    "SM-103",
+    "SM-104",
+    "SM-105",
+    "SM-106",
+    "SM-107"
+  ],
+  "estimate": "M",
+  "erd_refs": [
+    "\u00a74",
+    "\u00a75"
+  ]
+}

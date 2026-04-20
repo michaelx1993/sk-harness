@@ -1,0 +1,20 @@
+{
+  "id": "T-07",
+  "title": "Recon subagent template",
+  "deps": [],
+  "agent": "general-purpose",
+  "validator": "code-reviewer",
+  "idempotent": true,
+  "outputs": [
+    "templates/harness/agents/recon.md"
+  ],
+  "state": "pending",
+  "retries": 0,
+  "acceptance_ids": [
+    "SM-108"
+  ],
+  "estimate": "S",
+  "erd_refs": [
+    "\u00a76"
+  ]
+}
