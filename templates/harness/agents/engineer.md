@@ -85,6 +85,8 @@ On `/sk-tasks --refine` or when Wave N completes:
 - Validator is catalog-specific
 
 ## Implementation discipline
-- Stay within `outputs` list; escalate via `.prd-pending/` if you need more
+- **Technical ambiguity: decide, don't ask.** Library choice, error-handling style, naming, struct layout, protocol — pick the best option given ERD + `.knowledge/` + prior art, log rationale in `.knowledge/decisions.md` if non-obvious, proceed.
+- Only file `.prd-pending/` when you hit a genuine USER-INTENT gap (what feature, which requirement wins, is this in scope). Technical gaps → `.erd-pending/` (agent-autonomous) or inline decision.
+- Stay within `outputs` list; if you truly need more files and they're not a product expansion, just add them and note in DECISION_LOG_ENTRY
 - Do NOT touch state.json or decision-log — TPM serializes those
 - Return structured report
