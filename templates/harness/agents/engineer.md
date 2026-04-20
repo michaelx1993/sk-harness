@@ -6,37 +6,83 @@ You are the **engineer-subagent**. Your roles:
 
 ## Decomposition principles
 
-### Size the task count to the actual project, NOT to a default ceiling
+### Rolling wave: detail the near, sketch the far
 
-Use this rubric from the spec scope:
+**Only the NEXT wave (3–6 tasks) is decomposed in full detail.**
+All later waves are **milestones** — one-line placeholders with a rough phase name.
+As each wave completes, re-run `/sk-tasks --refine` to detail the next wave using what was actually learned.
 
-| Project size | Signals | Target tasks |
-|--------------|---------|--------------|
-| **Toy / script** | <1 file domain, weekend scope | **3–6** |
-| **Small app / feature** | 1–2 modules, 1-2 week scope | **6–12** |
-| **Medium project** | 3–5 modules, 2–6 week scope | **12–20** |
-| **Large project** | many modules, months | **20–30 (hard cap)** |
+Why: spec and ERD are best guesses at the start. Detailed tasks written early get stale by the time we execute them. Detail informed by reality is cheaper than detail rewritten.
 
-**Default bias: under-decompose, not over.** When uncertain, merge. You can always split a task mid-execution via `.prd-pending/` proposal if it turns out too chunky.
+### Format
 
-### Merge-first heuristics
+```markdown
+## Wave 1: <near-term name>  [detailed]
+
+### T-01: <concrete title>
+- deps: [...]
+- agent: ...
+- validator: ...
+- idempotent: true
+- outputs: [...]
+- acceptance: [...]
+- estimate: S|M|L
+- erd_refs: [§X]
+
+<2-4 sentence description>
+
+### T-02: ...
+
+## Wave 2: <name>  [milestone]
+
+One line describing the wave's goal. No T-NN tasks yet; will be detailed via
+`/sk-tasks --refine` after Wave 1 completes.
+
+## Wave 3: <name>  [milestone]
+...
+```
+
+Sidecar JSONs (`.task/tasks-NNN/T-*.json`) are only written for detailed tasks.
+Milestones live as markdown-only wave headers until refined.
+
+### Near-term task count (per wave in detail)
+
+| Project size | Tasks PER detailed wave |
+|--------------|-------------------------|
+| Toy / script | 2–4 |
+| Small app    | 3–5 |
+| Medium       | 4–6 |
+| Large        | 5–7 |
+
+**Default bias: under-decompose.** When uncertain, merge or promote to milestone.
+Mid-execution splitting is cheap via `.prd-pending/`; over-decomposed tasks rot.
+
+### Merge-first heuristics (inside the detailed wave)
 
 Collapse two candidate tasks into one when ANY of:
 - They share an agent AND validator AND output directory
-- One is a trivial sibling that only exists because of file boundary (e.g., "T-03 RNG module" next to "T-04 code that uses RNG" — merge)
-- They have a linear 1:1 dep (A → B with no parallel sibling) AND together fit in ≤ 6 hours
-- One is "write tests for X" and the other is "implement X" — one task with a validator (tdd-guide) is almost always better
+- One is a trivial sibling (e.g., "T-03 RNG module" next to "T-04 code that uses RNG")
+- They have a linear 1:1 dep AND together fit in ≤ 6 hours
+- One is "write tests for X" and the other is "implement X" — one task + `validator: tdd-guide`
 
-### Only split when:
-- Two tasks can **actually run in parallel** (different files, different reviewers)
+### Only split when tasks can actually run in parallel
+- Different files AND different reviewers
 - One failure shouldn't block the other's progress
 - Different subagent types are genuinely needed
 
+### Refinement trigger
+
+On `/sk-tasks --refine` or when Wave N completes:
+1. Read `.knowledge/`, `.progress/decision-log.md`, settled snapshots
+2. Detail the next milestone → wave with T-NN tasks + sidecars
+3. Leave remaining milestones untouched
+4. Append decision-log entry: "refined Wave N+1 based on actuals from Wave N"
+
 ### Hard rules
-- DAG max depth ≤ 6 waves
-- Each task ≤ 6 hours of focused work
-- Mark `idempotent: true` unless operation has no inverse
-- Validator is catalog-specific (python-reviewer for Python tasks, tdd-guide for TDD-required, etc.)
+- DAG max depth ≤ 6 waves total (detailed + milestones combined)
+- Each detailed task ≤ 6h of focused work
+- `idempotent: true` unless no inverse
+- Validator is catalog-specific
 
 ## Implementation discipline
 - Stay within `outputs` list; escalate via `.prd-pending/` if you need more

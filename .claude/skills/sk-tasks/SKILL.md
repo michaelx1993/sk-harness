@@ -1,7 +1,7 @@
 ---
 name: sk-tasks
-description: Decompose ERD into task DAG (tasks-NNN.md + sidecars), OR inspect tasks
-argument-hint: "[list|show <id>|graph|retry <id>]"
+description: Decompose ERD into task DAG (rolling wave) OR inspect OR refine next wave
+argument-hint: "[list|show <id>|graph|retry <id>|--refine]"
 ---
 
 ## Inspection mode (if $ARGUMENTS starts with list/show/graph/retry)
@@ -28,13 +28,44 @@ You (Claude) act as the engineer-subagent per `templates/harness/agents/engineer
 5. Initialize `.progress/state.json` task list with all IDs in state=pending.
 6. Append decision-log entry.
 
-### Principles
-- **Size the task count to the project.** Rubric: toy/script = 3–6 tasks; small feature = 6–12; medium = 12–20; large = 20–30 (hard cap). **Under-decompose by default.**
-- Merge siblings that share agent + validator + output dir, or that have linear 1:1 deps fitting in ≤ 6h
-- Don't split "write X" and "test X" — one task with `validator: tdd-guide` is almost always better
-- Only split when tasks can actually run in parallel (different files AND different reviewers)
-- Max wave depth 6; each task ≤ 6h; idempotent by default
-- Validator catalog-specific (python-reviewer, tdd-guide, code-reviewer, etc.)
+### Rolling-wave principle (CORE)
+**Detail the near wave; sketch the far.**
 
-### When in doubt: merge.
-You can always split a task mid-execution via `.prd-pending/` proposal if it turns out too chunky. Over-decomposition is harder to undo.
+- Only Wave 1 (the NEXT ≤6 tasks to execute) gets full T-NN detail + sidecars
+- Wave 2, 3, ... are **one-line milestones** in the markdown, no sidecars
+- When Wave 1 completes: `/sk-tasks --refine` details Wave 2 **using what was actually learned from Wave 1**
+- Repeat until iteration complete
+
+Why: over-planned far tasks rot. Planning fresh with ground truth is cheaper than rewriting stale tasks.
+
+### Near-term per-wave size
+- Toy/script: 2–4 tasks per detailed wave
+- Small app: 3–5
+- Medium: 4–6
+- Large: 5–7
+
+### Merge-first heuristics (inside the detailed wave)
+- Share agent + validator + output dir → merge
+- Linear 1:1 dep, ≤ 6h combined → merge
+- "write X" + "test X" → one task with `validator: tdd-guide`
+- Only split when tasks can actually run in parallel (different files AND different reviewers)
+
+### Hard rules
+- Max wave depth 6 total (detailed + milestones combined)
+- Detailed task ≤ 6h; idempotent by default
+- Validator catalog-specific
+
+### Milestone format (markdown-only, no sidecar)
+```markdown
+## Wave 2: Rendering core  [milestone]
+
+One-line goal. Will be detailed via `/sk-tasks --refine` after Wave 1 completes.
+```
+
+### `--refine` mode
+When $ARGUMENTS contains `--refine`:
+1. Find the first wave marked `[milestone]` with no detailed tasks
+2. Read `.knowledge/`, settled snapshots, recent decision-log
+3. Detail that wave with T-NN tasks + sidecars (still ≤ per-wave size cap)
+4. Leave later milestones untouched
+5. Append decision-log entry: "refined Wave N based on Wave N-1 actuals"
